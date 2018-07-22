@@ -26,6 +26,12 @@ public class Estudiante {
         this.carrera = carrera;
     }
 
+    public Estudiante(String nombre, String correo, String carrera) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.carrera = carrera;
+    }
+
     public int getMatricula() {
         return matricula;
     }

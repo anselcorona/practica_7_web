@@ -17,8 +17,16 @@ public interface EstudianteService {
     })
     @GET("estudiantes/")
     Call<List<Estudiante>> getEstudiantes();
+    @Headers({
+            "Accept: application/vnd.github.v3.full+json",
+            "Content-Type: application/json"
+    })
     @GET("estudiantes/{matricula}")
     Call<Estudiante> getEstudianteByMatricula(@Path("matricula") String matricula);
+    @Headers({
+            "Accept: application/vnd.github.v3.full+json",
+            "Content-Type: application/json"
+    })
     @POST("estudiantes/")
     Call<Estudiante> insertEstudiante(@Body Estudiante estudiante);
 

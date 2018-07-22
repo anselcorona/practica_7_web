@@ -1,8 +1,12 @@
 package com.ansxl.campaapp;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,29 +28,35 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     ArrayList<Estudiante> estudiantes;
     RecyclerView recyclerView;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                        .setAction("Add", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(MainActivity.this, CreateActivity.class);
+                                startActivity(i);
+                            }
+                        }).show();
             }
         });
 
         estudiantes = new ArrayList<>();
 
-
+        context = getApplicationContext();
         recyclerView = findViewById(R.id.estudiantes_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -58,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         if(estudiantesrecibidos!=null){
             estudiantesrecibidos.enqueue(new Callback<List<Estudiante>>() {
                 @Override
-                public void onResponse(Call<List<Estudiante>> call, Response<List<Estudiante>> response) {
+                public void onResponse(final Call<List<Estudiante>> call, Response<List<Estudiante>> response) {
                     if(response.code()!=200){
                         Toast.makeText(getApplicationContext(), "404", Toast.LENGTH_LONG).show();
                         Log.e("this", response.code()+"");
@@ -66,6 +79,12 @@ public class MainActivity extends AppCompatActivity {
                         if(response.body()!=null){
                             estudiantes= (ArrayList<Estudiante>) response.body();
                             EstudianteAdapter estudianteAdapter = new EstudianteAdapter(getApplicationContext(), estudiantes);
+                            estudianteAdapter.setOnEstudianteClickListener(new EstudianteAdapter.OnEstudianteClickListener() {
+                                @Override
+                                public void onEstudiantesClick(final Estudiante estudiante) {
+
+                                }
+                            });
                             recyclerView.setAdapter(estudianteAdapter);
                         }else{
                             estudiantes = new ArrayList<>();

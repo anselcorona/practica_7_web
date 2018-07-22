@@ -15,6 +15,18 @@ public class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Vi
     private Context context;
 
     private ArrayList<Estudiante> estudiantes;
+    private OnEstudianteClickListener onEstudianteClickListener;
+
+
+
+
+    public interface OnEstudianteClickListener{
+        void onEstudiantesClick(Estudiante estudiante);
+    }
+
+    public void setOnEstudianteClickListener(OnEstudianteClickListener onEstudianteClickListener){
+        this.onEstudianteClickListener = onEstudianteClickListener;
+    }
 
     public EstudianteAdapter(Context context, ArrayList<Estudiante> estudiantes){
         this.context = context;
@@ -38,6 +50,13 @@ public class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Vi
         holder.matricula.setText(matricula);
         holder.carrera.setText(carrera);
         holder.correo.setText(correo);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onEstudianteClickListener.onEstudiantesClick(estudiante);
+            }
+        });
 
     }
 
